@@ -1,0 +1,138 @@
+o
+
+(334
+
+%
+
+ST 8 | +24026) °C
+
+@ @
+services. logger
+services.ai_provider
+return runner.run(main)
+File "/usr/lib/python3.12/asyncio/runners.py”, line 118, in run
+return self. loop.run_until complete(task)
+File "/usr/lib/python3.12/asyncio/base_events.py”, line 687, in run_until_complete
+return future.result()
+File "/home/lav/Documents/personal/remember/test.py”, line 12, in save_scr
+
+ocr = auait svc.take_snapshot()
+
+F27 Owassl = 'z = m m | ©- o
+Q search
+: ®
+(@ v
+sons
+nynoise
+
+File "/home/lav/Documents/personal/remember/services/logger.py”, line 20, in take_snapshot
+
+inage: Inage = await self.screenshot.take_screenshot()
+
+File "/home/lav/Documents/personal/remember/services/screenshot.py”, line 67, in take_screenshot
+
+self.dbus_interface.Screenshot("", {})
+
+File "/home/lav/Documents/personal/remember/.venv/Llib/python3.12/site-packages/dbus/proxies.py”, line
+
+72, in _call__
+return self. proxy method(+args, *+keywords)
+
+File "/home/lav/Documents/personal/remember/.venv/Llib/python3.12/site-packages/dbus/proxies.py”, line
+
+141, in _call_
+
+return self. connection.call blocking(self. named_service,
+
+File "/home/lav/Documents/personal/remember/.venv/lib/python3.12/site-packages/dbus/connection.py”, i
+
+ne 625, in call_blocking
+message.append(signature=signature, *args)
+ValueError: Unable to guess signature from an empty dict
+(remember) lav :: Documents/personal/remember <mainx> % python test.py
+“C*CTraceback (most recent call last):
+File "/home/lav/Documents/personal/remember/test.py”, line 29, in <module>
+asyncio.run(save_scr())
+File "/usr/lib/python3.12/asyncio/runners.py”, line 194, in run
+
+return runner.run(main)
+
+File "/usr/lib/python3.12/asyncio/runners.py”, line 118, in run
+return self; loop;run until complete(tasi)
+
+File "/usr/lib/python3.12/asyncio/base_events.py”, line 674, in run_until_complete
+self.run_forever()
+
+File "/usr/lib/python3.12/asyncio/base_events.py”, line 641, in run_forever
+self._run_once()
+
+File "/usr/lib/python3.12/asyncio/base_events.py”, line 1987, in _run_once
+handle._run()
+
+File "/usr/lib/python3.12/asyncio/events.py”, line 88, in _run
+self._context.run(self._callback, #self. args)
+
+File "/home/lav/Documents/personal/remember/test.py”, line 18, in save_scr
+time. sleep(5)
+
+File "/usr/lib/python3.12/asyncio/runners.py”, line 157, in _on_sigint
+raise KeyboardInterrupt()
+
+KeyboardInterrupt
+
+(remember) lav :: Documents/personal/remember <main#»> % python test.py
+
+§ 12475:/./bin/zsh <
+
+“test.py” 29L, 6938
+
+® ollama local search data at
+& python - How can I specify
+
+# Python Type Checking (Gu
+
+& Howto apply default value tc
+® prompt engineering temp.
+o The Perfect Prompt: AP
+signals - How do I capture
+
+What are context w
+
+Building a local search Al
+
+YouTube
+
+Building a Vector Data
+
+carch_ag
+
+3 =
+
+5000/ 0cs.00/s | B @ 8445 | Ba Bus & O
+
+N
+
+stackoverflow
+
+# Home
+I3 Qquestions
+
+piayy
+
+s another way to write b: str
+*Charlie’ and itwill a
+ubstituting it for the default
+
+coLLECTIVES
+
+Explor
+
+Teams
+‘Cherry’) and o
+‘Cherzy') . The None
+overflow,
+
+default value if needed
+
+Code for this:
+
