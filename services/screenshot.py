@@ -26,48 +26,57 @@ def load_image_from_uri(uri: str) -> Image.Image:
     return Image.open(file_path)
 
 
-class ScreenshotService:
-    def __init__(self) -> None:
-        self.platform = "wayland"
-        self.loop = asyncio.get_running_loop()
-        match self.platform:
-            case "wayland" | "x11":
-                self.start_dbus_thread()
+def init():
+    global loop
+    platform = "wayland"
+    loop = asyncio.get_running_loop()
+    match platform:
+        case "wayland" | "x11":
+            start_dbus_thread()
 
-    def handle_dbus_screenshot(self, response, results, object_path, loop):
-        uri = results["uri"]
-        image = load_image_from_uri(uri)
-        asyncio.run_coroutine_threadsafe(self.handle_dbus_callback(image), loop)
 
-    async def handle_dbus_callback(self, img):
-        self.future.set_result(img)
-        self.event.set()
+def handle_dbus_screenshot(response, results, object_path, loop):
+    uri = results["uri"]
+    image = load_image_from_uri(uri)
+    asyncio.run_coroutine_threadsafe(handle_dbus_callback(image), loop)
 
-    def start_dbus_thread(self) -> None:
-        dbus.mainloop.glib.DBusGMainLoop(set_as_default=True)
-        bus = dbus.SessionBus()
-        obj = bus.get_object(
-            "org.freedesktop.portal.Desktop", "/org/freedesktop/portal/desktop"
-        )
-        self.dbus_interface = dbus.Interface(obj, "org.freedesktop.portal.Screenshot")
-        bus.add_signal_receiver(
-            functools.partial(self.handle_dbus_screenshot, loop=self.loop),
-            signal_name="Response",
-            dbus_interface="org.freedesktop.portal.Request",
-            bus_name="org.freedesktop.portal.Desktop",
-            path_keyword="object_path",
-        )
-        self.dbus_thread = Thread(target=dbus_screencap, daemon=True)
-        self.dbus_thread.start()
 
-    async def take_screenshot(self) -> Image.Image:
-        if hasattr(self, "dbus_interface"):  # Handle X11/Wayland
-            self.future = Future()
-            self.event = asyncio.Event()
-            self.dbus_interface.Screenshot("", {})
+async def handle_dbus_callback(img):
+    global future, event
+    future.set_result(img)
+    event.set()
 
-            await self.event.wait()
-            return self.future.result()
-        else:
-            raise Exception()
-            return Image.Image()
+
+def start_dbus_thread() -> None:
+    global dbus_interface
+    dbus.mainloop.glib.DBusGMainLoop(set_as_default=True)
+    bus = dbus.SessionBus()
+    obj = bus.get_object(
+        "org.freedesktop.portal.Desktop", "/org/freedesktop/portal/desktop"
+    )
+    dbus_interface = dbus.Interface(obj, "org.freedesktop.portal.Screenshot")
+    bus.add_signal_receiver(
+        functools.partial(handle_dbus_screenshot, loop=loop),
+        signal_name="Response",
+        dbus_interface="org.freedesktop.portal.Request",
+        bus_name="org.freedesktop.portal.Desktop",
+        path_keyword="object_path",
+    )
+    dbus_thread = Thread(target=dbus_screencap, daemon=True)
+    dbus_thread.start()
+
+
+async def take_screenshot() -> Image.Image:
+    global future, event
+    if dbus_interface:  # Handle X11/Wayland
+        future = Future()
+        event = asyncio.Event()
+        dbus_interface.Screenshot("", {})
+
+        await event.wait()
+        return future.result()
+    else:
+        raise Exception()
+
+
+init()

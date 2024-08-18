@@ -1,19 +1,16 @@
-from services.ai_provider import GroqProviderService
-from services.credential import CredentialService
-from services.lookup import LookupService
+import services.lookup as lookup
 import PIL.Image as Image
 import io
 import base64
 
 
 class WindowApi:
-    def __init__(self, credentials: CredentialService) -> None:
-        self._provider = GroqProviderService("gemma2-9b-it", credentials=credentials)
-        self._lookup = LookupService(credentials=credentials)
+    def __init__(self, model: str) -> None:
+        lookup.init(model)
 
     def global_search(self, query: str):
-        res = self._lookup.query(query)
-        return res.serialize()
+        res = lookup.query(query)
+        return lookup.lookup_result_serialize(res)
 
     def get_screenshot_image(self, screenshot_path: str) -> str:
         screenshot = Image.open(screenshot_path)

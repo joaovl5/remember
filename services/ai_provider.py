@@ -1,37 +1,32 @@
 import ollama
 import groq
-from services.credential import CredentialService
+import services.credential as credential
+from typing import Callable
+
+llm_backend_type = Callable[[str, str, str, float], str]
 
 
-class AIProviderService:
-    def __init__(self, model: str) -> None:
-        self.model = model
-
-    def generate(self, system: str, prompt: str, temperature: float) -> str:
-        return ollama.chat(
-            model=self.model,
-            messages=[
-                ollama.Message(role="system", content=system),
-                ollama.Message(role="user", content=prompt),
-            ],
-            options=ollama.Options(temperature=temperature),
-        )["message"]["content"]
+def llm_backend_llama(model: str, system: str, prompt: str, temperature: float):
+    return ollama.chat(
+        model=model,
+        messages=[
+            ollama.Message(role="system", content=system),
+            ollama.Message(role="user", content=prompt),
+        ],
+        options=ollama.Options(temperature=temperature),
+    )["message"]["content"]
 
 
-class GroqProviderService(AIProviderService):
-    def __init__(self, model: str, credentials: CredentialService) -> None:
-        super().__init__(model)
-        self.API_KEY = credentials.get_env_key("API_GROQ")
-        self.client = groq.Groq(api_key=self.API_KEY)
+def llm_backend_groq(model: str, system: str, prompt: str, temperature: float):
+    API_KEY = credential.get_env_key("API_GROQ")
+    client = groq.Groq(api_key=API_KEY)
+    res = client.chat.completions.create(
+        messages=[
+            {"role": "system", "content": system},
+            {"role": "user", "content": prompt},
+        ],
+        model=model,
+        temperature=temperature,
+    )
 
-    def generate(self, system: str, prompt: str, temperature: float) -> str:
-        res = self.client.chat.completions.create(
-            messages=[
-                {"role": "system", "content": system},
-                {"role": "user", "content": prompt},
-            ],
-            model=self.model,
-            temperature=temperature,
-        )
-
-        return res.choices[0].message.content or "Error!"
+    return res.choices[0].message.content or "Error!"

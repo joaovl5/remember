@@ -3,22 +3,25 @@ import webview
 from gui.api import WindowApi
 
 
-class Window:
-    def __init__(self, api: WindowApi) -> None:
-        self.api = api
-        self.window = webview.create_window(
-            "Remember",
-            url=self.get_entry_point(),
-            js_api=self.api,
-        )
+def window_init(api: WindowApi) -> None:
+    global window
+    window = webview.create_window(
+        "Remember",
+        url=get_entry_point(),
+        js_api=api,
+    )
 
-    def get_entry_point(self) -> str:
-        return "http://localhost:9002/"
 
-    def execute_js(self, js: str):
-        self.window.evaluate_js(
-            js,
-        )
+def get_entry_point() -> str:
+    return "http://localhost:9002/"
 
-    def start(self):
-        webview.start(debug=True)
+
+def execute_js(js: str):
+    global window
+    window.evaluate_js(
+        js,
+    )
+
+
+def window_start():
+    webview.start(debug=True)

@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from services.ai_provider import AIProviderService
+import services.ai_provider as ai
 from typing import Any, Callable, Optional
 
 
@@ -11,25 +11,27 @@ class ParseResult:
 
 @dataclass
 class Agent:
-    provider: AIProviderService
+    model: str
+    provider: ai.llm_backend_type
     system_prompt: str
     parser: Optional[Callable[[str], ParseResult]] = None
     temperature: float = 0.5
 
-    def make(self, prompt: str) -> Any:
-        attempts = 1
-        while attempts <= 5:
-            output = self.provider.generate(
-                self.system_prompt, prompt, temperature=self.temperature
-            )
-            if self.parser:
-                parser_result = self.parser(output)
-                if parser_result.success:
-                    return parser_result.data
-                else:
-                    attempts += 1
-                    print(f"Failed attempt: {output}")
-                    continue
+
+def agent_run(agent: Agent, prompt: str) -> Any:
+    attempts = 1
+    while attempts <= 5:
+        output = agent.provider(
+            agent.model, agent.system_prompt, prompt, agent.temperature
+        )
+        if agent.parser:
+            parser_result = agent.parser(output)
+            if parser_result.success:
+                return parser_result.data
             else:
-                return output
-        raise Exception()
+                attempts += 1
+                print(f"Failed attempt: {output}")
+                continue
+        else:
+            return output
+    raise Exception()
