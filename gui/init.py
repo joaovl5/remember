@@ -13,7 +13,7 @@ class Window:
         )
 
     def get_entry_point(self) -> str:
-        return "http://localhost:9000/"
+        return "http://localhost:9002/"
 
     def execute_js(self, js: str):
         self.window.evaluate_js(

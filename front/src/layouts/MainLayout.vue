@@ -1,9 +1,13 @@
 <template>
   <div class="layout-container">
     <div class="side-bar">
-      <q-btn size="16px" dense flat round icon="sym_o_search" />
+      <router-link to="/" class="no-link">
+        <q-btn size="16px" dense flat round icon="sym_o_search" />
+      </router-link>
       <q-btn size="16px" dense flat round icon="sym_o_attach_file" />
-      <q-btn size="16px" dense flat round icon="sym_o_photo_camera" />
+      <router-link to="/snapshots" class="no-link">
+        <q-btn size="16px" dense flat round icon="sym_o_photo_camera" />
+      </router-link>
     </div>
     <div class="content-container">
       <div class="header">
@@ -27,6 +31,11 @@ import RecordToggle from "src/components/RecordToggle.vue";
   display: flex;
   width: 100vw;
   height: 100vh;
+}
+
+.no-link {
+  color: inherit;
+  text-decoration: none;
 }
 
 .side-bar {
